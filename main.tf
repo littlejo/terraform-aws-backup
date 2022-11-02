@@ -34,8 +34,8 @@ resource "aws_backup_plan" "this" {
         for_each = rule.value.lifecycle != null ? [true] : []
 
         content {
-          cold_storage_after = lookup(rule.value.lifecycle, "cold_storage_after", null)
-          delete_after       = lookup(rule.value.lifecycle, "delete_after", null)
+          cold_storage_after = try(rule.value.lifecycle.cold_storage_after, null)
+          delete_after       = try(rule.value.lifecycle.delete_after, null)
         }
       }
 

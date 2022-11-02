@@ -14,11 +14,21 @@ variable "rules" {
         completion_window        = optional(string)
         recovery_point_tags      = optional(map(string))
         enable_continuous_backup = optional(string)
-        lifecycle                = optional(map(any))
+        lifecycle = optional(object(
+          {
+            cold_storage_after = optional(number)
+            delete_after       = optional(number)
+          }
+        ))
         copy_action = optional(object(
           {
             destination_vault_arn = optional(string)
-            lifecycle             = optional(map(any))
+            lifecycle = optional(object(
+              {
+                cold_storage_after = optional(number)
+                delete_after       = optional(number)
+              }
+            ))
           }
         ))
       }
