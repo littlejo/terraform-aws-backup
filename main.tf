@@ -22,16 +22,16 @@ resource "aws_backup_plan" "this" {
     for_each = var.rules
 
     content {
-      rule_name                = lookup(rule.value, "name", null)
+      rule_name                = rule.value.name
       target_vault_name        = join("", var.vault_enabled ? aws_backup_vault.this.*.name : data.aws_backup_vault.this.*.name)
-      schedule                 = lookup(rule.value, "schedule", null)
-      start_window             = lookup(rule.value, "start_window", null)
-      completion_window        = lookup(rule.value, "completion_window", null)
-      recovery_point_tags      = lookup(rule.value, "recovery_point_tags", null)
-      enable_continuous_backup = lookup(rule.value, "enable_continuous_backup", null)
+      schedule                 = rule.value.schedule
+      start_window             = rule.value.start_window
+      completion_window        = rule.value.completion_window
+      recovery_point_tags      = rule.value.recovery_point_tags
+      enable_continuous_backup = rule.value.enable_continuous_backup
 
       dynamic "lifecycle" {
-        for_each = lookup(rule.value, "lifecycle", null) != null ? [true] : []
+        for_each = rule.value.lifecycle != null ? [true] : []
 
         content {
           cold_storage_after = lookup(rule.value.lifecycle, "cold_storage_after", null)
@@ -40,7 +40,7 @@ resource "aws_backup_plan" "this" {
       }
 
       dynamic "copy_action" {
-        for_each = try(lookup(rule.value.copy_action, "destination_vault_arn", null), null) != null ? [true] : []
+        for_each = lookup(rule.value.copy_action, "destination_vault_arn", null) != null ? [true] : []
 
         content {
           destination_vault_arn = lookup(rule.value.copy_action, "destination_vault_arn", null)

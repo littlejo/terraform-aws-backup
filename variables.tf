@@ -5,7 +5,20 @@ variable "kms_key_arn" {
 }
 
 variable "rules" {
-  type        = list(any)
+  type = list(
+    object(
+      {
+        name                     = optional(string)
+        schedule                 = optional(string)
+        start_window             = optional(string)
+        completion_window        = optional(string)
+        recovery_point_tags      = optional(string)
+        enable_continuous_backup = optional(string)
+        lifecycle                = optional(map(any))
+        copy_action              = optional(map(any))
+      }
+    )
+  )
   description = "An array of rule maps used to define schedules in a backup plan"
   default     = []
 }
