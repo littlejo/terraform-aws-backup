@@ -18,7 +18,7 @@ variable "rules" {
         copy_action = optional(object(
           {
             destination_vault_arn = optional(string)
-            lifecycle             = map(any)
+            lifecycle             = optional(map(any))
           }
         ))
       }
