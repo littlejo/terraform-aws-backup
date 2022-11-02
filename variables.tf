@@ -12,10 +12,15 @@ variable "rules" {
         schedule                 = optional(string)
         start_window             = optional(string)
         completion_window        = optional(string)
-        recovery_point_tags      = optional(string)
+        recovery_point_tags      = optional(map(string))
         enable_continuous_backup = optional(string)
         lifecycle                = optional(map(any))
-        copy_action              = optional(map(any))
+        copy_action = optional(object(
+          {
+            destination_vault_arn = optional(string)
+            lifecycle             = map(any)
+          }
+        ))
       }
     )
   )
