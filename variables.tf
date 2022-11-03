@@ -106,3 +106,19 @@ variable "permissions_boundary" {
   default     = null
   description = "The permissions boundary to set on the role"
 }
+
+variable "lock_enabled" {
+  type        = bool
+  description = "Should we lock backup vault?"
+  default     = false
+}
+
+variable "lock" {
+  type = object({
+    changeable_for_days = optional(number)
+    max_retention_days  = optional(number)
+    min_retention_days  = optional(number)
+  })
+  description = "Settings of aws vault lock"
+  default     = null
+}

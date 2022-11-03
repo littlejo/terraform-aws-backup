@@ -1,5 +1,6 @@
 locals {
   iam_role_arn = join("", var.iam_role_enabled ? aws_iam_role.this.*.arn : data.aws_iam_role.this.*.arn)
+  vault_name   = join("", var.vault_enabled ? aws_backup_vault.this.*.name : data.aws_backup_vault.this.*.name)
 }
 
 resource "aws_backup_vault" "this" {
@@ -23,7 +24,7 @@ resource "aws_backup_plan" "this" {
 
     content {
       rule_name                = rule.value.name
-      target_vault_name        = join("", var.vault_enabled ? aws_backup_vault.this.*.name : data.aws_backup_vault.this.*.name)
+      target_vault_name        = local.vault_name
       schedule                 = rule.value.schedule
       start_window             = rule.value.start_window
       completion_window        = rule.value.completion_window
@@ -76,4 +77,12 @@ resource "aws_backup_selection" "this" {
       value = selection_tag.value["value"]
     }
   }
+}
+
+resource "aws_backup_vault_lock_configuration" "this" {
+  count               = var.lock_enabled ? 1 : 0
+  backup_vault_name   = local.vault_name
+  changeable_for_days = var.lock.changeable_for_days
+  max_retention_days  = var.lock.max_retention_days
+  min_retention_days  = var.lock.min_retention_days
 }
