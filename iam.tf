@@ -23,7 +23,7 @@ resource "aws_iam_role" "this" {
 }
 
 data "aws_iam_role" "this" {
-  count = var.iam_role_enabled ? 0 : 1
+  count = var.iam_role_enabled ? 0 : var.plan_enabled ? 1 : 0
   name  = var.iam_role_name
 }
 
