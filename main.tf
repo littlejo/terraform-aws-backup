@@ -15,6 +15,13 @@ data "aws_backup_vault" "this" {
   name  = var.vault_name
 }
 
+resource "aws_backup_vault_policy" "this" {
+  count = var.vault_policy == "" ? 0 : 1
+
+  backup_vault_name = local.vault_name
+  policy            = var.vault_policy
+}
+
 resource "aws_backup_plan" "this" {
   count = var.plan_enabled ? 1 : 0
   name  = var.plan_name

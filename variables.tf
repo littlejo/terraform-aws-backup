@@ -50,6 +50,12 @@ variable "not_resources" {
   default     = []
 }
 
+variable "vault_policy" {
+  type        = string
+  description = "Vault policy"
+  default     = ""
+}
+
 variable "vault_name" {
   type        = string
   description = "Vault Name"
