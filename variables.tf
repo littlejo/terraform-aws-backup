@@ -59,6 +59,7 @@ variable "vault_policy" {
 variable "vault_name" {
   type        = string
   description = "Vault Name"
+  default     = null
 }
 
 variable "vault_enabled" {
