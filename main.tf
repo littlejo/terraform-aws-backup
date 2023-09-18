@@ -93,3 +93,16 @@ resource "aws_backup_vault_lock_configuration" "this" {
   max_retention_days  = var.lock.max_retention_days
   min_retention_days  = var.lock.min_retention_days
 }
+
+data "aws_iam_role" "this" {
+  count = var.iam_role_enabled ? 0 : var.plan_enabled ? 1 : 0
+  name  = var.iam_role_name
+}
+
+module "iam" {
+  source = "./modules/iam"
+  count  = var.iam_role_enabled ? 1 : 0
+
+  name                 = var.iam_role_name
+  permissions_boundary = var.permissions_boundary
+}
