@@ -71,7 +71,7 @@ resource "aws_backup_plan" "this" {
 resource "aws_backup_selection" "this" {
   count         = var.plan_enabled ? 1 : 0
   name          = var.selection_name
-  iam_role_arn  = var.iam_role_arn == null ? module.iam.arn : var.iam_role_arn
+  iam_role_arn  = var.iam_role_arn == null ? module.iam[0].arn : var.iam_role_arn
   plan_id       = join("", aws_backup_plan.this[*].id)
   resources     = var.backup_resources
   not_resources = var.not_resources
