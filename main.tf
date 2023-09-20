@@ -1,6 +1,5 @@
 locals {
-  iam_role_arn = join("", var.iam_role_enabled ? aws_iam_role.this.*.arn : data.aws_iam_role.this.*.arn)
-  vault_name   = join("", var.vault_enabled ? aws_backup_vault.this.*.name : data.aws_backup_vault.this.*.name)
+  vault_name = join("", var.vault_enabled ? aws_backup_vault.this[*].name : data.aws_backup_vault.this[*].name)
 }
 
 resource "aws_backup_vault" "this" {
@@ -72,8 +71,8 @@ resource "aws_backup_plan" "this" {
 resource "aws_backup_selection" "this" {
   count         = var.plan_enabled ? 1 : 0
   name          = var.selection_name
-  iam_role_arn  = local.iam_role_arn
-  plan_id       = join("", aws_backup_plan.this.*.id)
+  iam_role_arn  = var.iam_role_arn == null ? module.iam.arn : var.iam_role_arn
+  plan_id       = join("", aws_backup_plan.this[*].id)
   resources     = var.backup_resources
   not_resources = var.not_resources
   dynamic "selection_tag" {
@@ -94,14 +93,9 @@ resource "aws_backup_vault_lock_configuration" "this" {
   min_retention_days  = var.lock.min_retention_days
 }
 
-data "aws_iam_role" "this" {
-  count = var.iam_role_enabled ? 0 : var.plan_enabled ? 1 : 0
-  name  = var.iam_role_name
-}
-
 module "iam" {
   source = "./modules/iam"
-  count  = var.iam_role_enabled ? 1 : 0
+  count  = var.iam_role_name == null ? 0 : 1
 
   name                 = var.iam_role_name
   permissions_boundary = var.permissions_boundary

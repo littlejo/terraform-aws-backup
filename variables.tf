@@ -96,15 +96,15 @@ variable "selection_tags" {
   default     = []
 }
 
-variable "iam_role_enabled" {
-  type        = bool
-  description = "Should we create a new Iam Role and Policy Attachment"
-  default     = true
-}
-
 variable "iam_role_name" {
   type        = string
-  description = "Override target IAM Role Name"
+  description = "You need to create an IAM Role"
+  default     = null
+}
+
+variable "iam_role_arn" {
+  type        = string
+  description = "You already created an IAM Role"
   default     = null
 }
 
