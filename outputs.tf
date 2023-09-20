@@ -3,5 +3,5 @@ output "arn" {
 }
 
 output "iam_role_arn" {
-  value = var.iam_role_name == null ? module.iam[0].arn : var.iam_role_arn
+  value = var.iam_role_name == null ? var.iam_role_arn : module.iam[0].arn
 }
